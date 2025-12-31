@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ASENDIA 2026 Organization</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <!-- Fonts: Inter & Noto Sans KR -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+
+    <!-- Tailwind Config for Custom Fonts & Colors -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', '"Noto Sans KR"', 'sans-serif'], 
+                    },
+                    colors: {
+                        zinc: {
+                            50: '#fafafa', 100: '#f4f4f5', 200: '#e4e4e7', 300: '#d4d4d8', 400: '#a1a1aa',
+                            500: '#71717a', 600: '#52525b', 700: '#3f3f46', 800: '#27272a', 900: '#18181b',
+                        }
+                    },
+                    animation: {
+                        'neon-pulse': 'neonPulse 3s infinite alternate',
+                    },
+                    keyframes: {
+                        neonPulse: {
+                            '0%': { boxShadow: '0 0 10px rgba(59, 130, 246, 0.1), 0 0 20px rgba(59, 130, 246, 0.05)' },
+                            '100%': { boxShadow: '0 0 15px rgba(59, 130, 246, 0.2), 0 0 30px rgba(59, 130, 246, 0.1)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body, input, select, button, textarea { font-family: 'Inter', 'Noto Sans KR', sans-serif !important; }
+        
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background-color: #d4d4d8; border-radius: 20px; }
+        ::-webkit-scrollbar-thumb:hover { background-color: #a1a1aa; }
+        
+        .fade-in { animation: fadeIn 0.4s ease-in-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        .neon-border {
+            border: 1px solid rgba(59, 130, 246, 0.3);
+        }
+
+        .custom-tree-line {
+            position: absolute; left: 1.1rem; top: 0; bottom: 0; width: 1px; background-color: #e4e4e7;
+        }
+        
+        /* CM Highlight Utility */
+        .cm-badge {
+            background-color: #0ea5e9;
+            color: white;
+            font-size: 0.65rem;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: 700;
+        }
+    </style>
+    <!-- Chosen Palette: Zinc (Base), Blue/Sky (Primary/CM), White (Clean) -->
+    <!-- Application Structure Plan: Dashboard Layout with Sidebar Navigation. Content is divided into Tabs. -->
+    <!-- Confirmation: NO SVG graphics used (Lucide icons via script). NO Mermaid JS used. Charts Removed. -->
+</head>
+<body class="bg-zinc-200 min-h-screen flex items-center justify-center p-4 selection:bg-zinc-800 selection:text-white overflow-hidden">
+
+    <div class="w-full max-w-[1400px] h-[92vh] bg-white rounded-2xl shadow-2xl flex flex-col overflow-hidden relative neon-border animate-neon-pulse">
+        
+        <!-- Header Bar -->
+        <div class="h-14 bg-zinc-50 border-b border-zinc-200 flex items-center justify-between px-6 shrink-0 z-30">
+            <div class="flex items-center gap-2">
+                <div class="w-3 h-3 rounded-full bg-red-400/80 hover:bg-red-500 transition-colors"></div>
+                <div class="w-3 h-3 rounded-full bg-amber-400/80 hover:bg-amber-500 transition-colors"></div>
+                <div class="w-3 h-3 rounded-full bg-green-400/80 hover:bg-green-500 transition-colors"></div>
+            </div>
+            
+            <div class="flex-1 text-center">
+                <span class="text-sm font-bold text-zinc-700 tracking-wide flex items-center justify-center gap-2">
+                    <i data-lucide="building-2" class="w-4 h-4 text-blue-500"></i>
+                    ASENDIA <span class="text-blue-600">2026</span> Organization Plan
+                </span>
+            </div>
+            
+            <div class="w-14 flex justify-end">
+                <span class="text-xs text-zinc-400 font-mono">CONFIDENTIAL</span>
+            </div>
+        </div>
+
+        <div class="flex flex-1 overflow-hidden">
+            
+            <!-- Sidebar Navigation -->
+            <aside class="w-64 bg-zinc-50/80 border-r border-zinc-200 flex flex-col py-8 px-6 backdrop-blur-sm overflow-y-auto">
+                <div class="mb-8">
+                    <h2 class="text-xs font-bold text-zinc-400 uppercase tracking-widest mb-4">Report Sections</h2>
+                    <nav class="space-y-1">
+                        <button onclick="switchTab('overview')" id="nav-overview" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg bg-zinc-200 text-zinc-900 text-sm font-medium transition-all text-left">
+                            <i data-lucide="layout-dashboard" class="w-4 h-4"></i> Overview
+                        </button>
+                        <button onclick="switchTab('org')" id="nav-org" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-zinc-500 hover:bg-zinc-100 hover:text-zinc-900 text-sm font-medium transition-all text-left">
+                            <i data-lucide="network" class="w-4 h-4"></i> Org Structure
+                        </button>
+                        <button onclick="switchTab('personnel')" id="nav-personnel" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-zinc-500 hover:bg-zinc-100 hover:text-zinc-900 text-sm font-medium transition-all text-left">
+                            <i data-lucide="users" class="w-4 h-4"></i> Personnel Shift
+                        </button>
+                        <button onclick="switchTab('contacts')" id="nav-contacts" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-zinc-500 hover:bg-zinc-100 hover:text-zinc-900 text-sm font-medium transition-all text-left">
+                            <i data-lucide="contact" class="w-4 h-4"></i> Contact List
+                        </button>
+                    </nav>
+                </div>
+
+                <div class="mt-auto">
+                    <div class="bg-blue-50 rounded-xl p-4 border border-blue-100">
+                        <div class="flex items-center gap-2 mb-2">
+                            <i data-lucide="info" class="w-4 h-4 text-blue-500"></i>
+                            <span class="text-xs font-bold text-blue-700">Report Focus</span>
+                        </div>
+                        <p class="text-[10px] text-blue-600/80 leading-relaxed">
+                            본 리포트는 2026년 CM(Contract Manufacturing) 대응 역량 강화 및 ASM 전담 조직 개편 내용을 담고 있습니다.
+                        </p>
+                    </div>
+                    <div class="mt-6 flex items-center gap-3 px-1 border-t border-zinc-200 pt-6">
+                        <!-- UPDATED LOGO -->
+                        <img src="https://github.com/asendia2025/sales/blob/main/img/logo_company_transparency.png?raw=true" alt="Company Logo" class="w-8 h-8 object-contain shrink-0">
+                        <div class="flex flex-col min-w-0">
+                            <span class="text-xs font-bold text-zinc-900 leading-tight">ASENDIA</span>
+                            <span class="text-[10px] text-zinc-500">Supplier Mgmt Team</span>
+                        </div>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- Main Content Area -->
+            <main class="flex-1 overflow-y-auto bg-zinc-100/50 scroll-smooth p-8 md:p-12 relative">
+                
+                <!-- Tab 1: Overview -->
+                <div id="view-overview" class="max-w-5xl mx-auto fade-in">
+                    <header class="mb-8">
+                        <span class="text-xs font-bold tracking-widest text-zinc-400 uppercase mb-2 block">Executive Summary</span>
+                        <h1 class="text-3xl font-bold text-zinc-900 tracking-tight">2026 Organization Changes</h1>
+                        <p class="text-zinc-500 mt-2 text-lg">Enhancing ASM Partnership & CM Operational Excellence</p>
+                    </header>
+
+                    <div class="bg-white rounded-xl border border-zinc-200 p-8 shadow-sm mb-8">
+                        <p class="text-zinc-600 leading-relaxed">
+                            2026년을 맞아 ASENDIA는 고객사(ASM)와의 파트너십을 강화하고, 제조 및 품질 대응의 전문성을 높이기 위해 조직 개편을 단행합니다. 
+                            핵심은 <strong>CM(Contract Manufacturing) 사업의 효율적 운영</strong>과 <strong>영업-제조 간의 시너지</strong>를 극대화하는 것입니다.
+                        </p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- Card 1 -->
+                        <div class="bg-white p-6 rounded-xl border border-zinc-200 hover:border-blue-300 hover:shadow-md transition-all group">
+                            <div class="w-10 h-10 rounded-lg bg-blue-50 flex items-center justify-center mb-4 group-hover:bg-blue-100 transition-colors">
+                                <i data-lucide="briefcase" class="w-5 h-5 text-blue-600"></i>
+                            </div>
+                            <h3 class="font-bold text-zinc-900 mb-2">영업 전문성 고도화</h3>
+                            <p class="text-sm text-zinc-500 leading-relaxed">제조 전문가를 ASM 전담 영업 리더로 배치하여 기술적 타당성 검토 및 납기 관리 역량을 대폭 강화했습니다.</p>
+                        </div>
+                        <!-- Card 2 -->
+                        <div class="bg-white p-6 rounded-xl border border-zinc-200 hover:border-sky-300 hover:shadow-md transition-all group">
+                            <div class="w-10 h-10 rounded-lg bg-sky-50 flex items-center justify-center mb-4 group-hover:bg-sky-100 transition-colors">
+                                <i data-lucide="zap" class="w-5 h-5 text-sky-600"></i>
+                            </div>
+                            <h3 class="font-bold text-zinc-900 mb-2">신속한 제조 대응</h3>
+                            <p class="text-sm text-zinc-500 leading-relaxed">통합운영센터 산하로 제조 조직을 일원화하고, 의사결정 단계를 축소하여 긴급 이슈에 즉각 대응합니다.</p>
+                        </div>
+                        <!-- Card 3 -->
+                        <div class="bg-white p-6 rounded-xl border border-zinc-200 hover:border-emerald-300 hover:shadow-md transition-all group">
+                            <div class="w-10 h-10 rounded-lg bg-emerald-50 flex items-center justify-center mb-4 group-hover:bg-emerald-100 transition-colors">
+                                <i data-lucide="shield-check" class="w-5 h-5 text-emerald-600"></i>
+                            </div>
+                            <h3 class="font-bold text-zinc-900 mb-2">기술 기반 SCM</h3>
+                            <p class="text-sm text-zinc-500 leading-relaxed">엔지니어링 배경의 관리자를 구매 부서에 배치하여 원자재 기술 리스크를 사전에 차단합니다.</p>
+                        </div>
+                        <!-- Card 4 -->
+                        <div class="bg-white p-6 rounded-xl border border-zinc-200 hover:border-amber-300 hover:shadow-md transition-all group">
+                            <div class="w-10 h-10 rounded-lg bg-amber-50 flex items-center justify-center mb-4 group-hover:bg-amber-100 transition-colors">
+                                <i data-lucide="check-circle-2" class="w-5 h-5 text-amber-600"></i>
+                            </div>
+                            <h3 class="font-bold text-zinc-900 mb-2">품질 라인업 확립</h3>
+                            <p class="text-sm text-zinc-500 leading-relaxed">영업-제조-구매-품질로 이어지는 Value Chain 상의 핵심 리더를 확정하여 안정적 공급을 보장합니다.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tab 2: Org Structure -->
+                <div id="view-org" class="max-w-6xl mx-auto fade-in hidden">
+                    <header class="mb-6 flex justify-between items-end">
+                        <div>
+                            <span class="text-xs font-bold tracking-widest text-zinc-400 uppercase mb-2 block">Structure</span>
+                            <h1 class="text-3xl font-bold text-zinc-900 tracking-tight">Organization Explorer</h1>
+                        </div>
+                        <div class="text-xs text-zinc-500">
+                            <span class="inline-block w-2 h-2 bg-sky-500 rounded-full mr-1"></span> CM Core Unit
+                        </div>
+                    </header>
+
+                    <!-- CHANGED: Removed fixed height (h-[600px]) and added items-start for dynamic height -->
+                    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+                        <!-- Tree Pane: Removed internal scroll (overflow-hidden, flex-1, etc.) to allow full expansion -->
+                        <div class="lg:col-span-5 bg-white rounded-xl shadow-sm border border-zinc-200">
+                            <div class="p-4 bg-zinc-50 border-b border-zinc-200 flex justify-between items-center">
+                                <span class="font-bold text-zinc-700 text-sm">Departments</span>
+                                <span class="text-[10px] text-zinc-400 uppercase font-bold tracking-wider">Hierarchy</span>
+                            </div>
+                            <!-- Removed overflow-y-auto to disable scroll -->
+                            <div class="p-2" id="orgTreeContainer">
+                                <!-- Tree Content JS Generated -->
+                            </div>
+                        </div>
+
+                        <!-- Details Pane: Added sticky positioning so it stays visible when scrolling the long tree -->
+                        <div class="lg:col-span-7 bg-white rounded-xl shadow-sm border border-zinc-200 p-8 flex flex-col relative lg:sticky lg:top-6 min-h-[600px]">
+                            <div id="detailPlaceholder" class="absolute inset-0 flex flex-col items-center justify-center bg-zinc-50/50 z-10 backdrop-blur-[1px]">
+                                <i data-lucide="mouse-pointer-click" class="w-10 h-10 text-zinc-300 mb-3"></i>
+                                <p class="text-zinc-400 font-medium">Select a department to view details</p>
+                            </div>
+
+                            <div id="detailContent" class="opacity-0 transition-opacity duration-300 h-full flex flex-col">
+                                <div class="flex justify-between items-start mb-6">
+                                    <div>
+                                        <div id="detailBadge" class="hidden cm-badge mb-2 self-start">CM Core Unit</div>
+                                        <h2 id="detailTitle" class="text-2xl font-bold text-zinc-900"></h2>
+                                        <p id="detailRole" class="text-sm text-zinc-500 mt-1"></p>
+                                    </div>
+                                    <div class="w-12 h-12 bg-zinc-100 rounded-xl flex items-center justify-center text-zinc-400">
+                                        <i data-lucide="building" class="w-6 h-6"></i>
+                                    </div>
+                                </div>
+
+                                <div class="bg-zinc-50 rounded-xl p-5 border border-zinc-100 mb-6">
+                                    <h3 class="text-xs font-bold text-zinc-400 uppercase tracking-wider mb-4">Leadership</h3>
+                                    <div class="flex items-center gap-4">
+                                        <div class="w-10 h-10 rounded-full bg-zinc-200 flex items-center justify-center text-zinc-500 font-bold text-sm">
+                                            <i data-lucide="user" class="w-5 h-5"></i>
+                                        </div>
+                                        <div>
+                                            <p class="text-xs text-zinc-400 mb-0.5">Head / Leader</p>
+                                            <p id="detailName" class="font-bold text-zinc-800 text-lg"></p>
+                                        </div>
+                                    </div>
+                                    <div class="mt-4 grid grid-cols-2 gap-4 pt-4 border-t border-zinc-200/50">
+                                        <div>
+                                            <p class="text-xs text-zinc-400 mb-1">Email</p>
+                                            <p id="detailEmail" class="text-sm font-medium text-blue-600 truncate"></p>
+                                        </div>
+                                        <div>
+                                            <p class="text-xs text-zinc-400 mb-1">Phone</p>
+                                            <p id="detailPhone" class="text-sm font-medium text-zinc-700"></p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div id="membersSection" class="hidden flex-1">
+                                    <h3 class="text-xs font-bold text-zinc-400 uppercase tracking-wider mb-3">Team Members</h3>
+                                    <ul id="memberList" class="space-y-2"></ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tab 3: Personnel Shift -->
+                <div id="view-personnel" class="max-w-5xl mx-auto fade-in hidden">
+                    <header class="mb-8">
+                        <span class="text-xs font-bold tracking-widest text-zinc-400 uppercase mb-2 block">Key Movements</span>
+                        <!-- CHANGED Title as requested -->
+                        <h1 class="text-3xl font-bold text-zinc-900 tracking-tight">2025 CM Workforce Personnel Shift</h1>
+                    </header>
+
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <!-- Person 1 -->
+                        <div class="bg-white rounded-xl border border-zinc-200 p-6 shadow-sm hover:shadow-md transition-shadow relative overflow-hidden group">
+                            <div class="absolute top-0 left-0 w-1 h-full bg-blue-500"></div>
+                            <div class="flex justify-between items-start mb-6">
+                                <div>
+                                    <h3 class="text-lg font-bold text-zinc-900">변태준 상무</h3>
+                                    <span class="text-[10px] font-bold text-blue-600 bg-blue-50 px-2 py-1 rounded mt-1 inline-block">Promotion / Transfer</span>
+                                </div>
+                            </div>
+                            <div class="space-y-4">
+                                <div class="flex items-center justify-between text-sm">
+                                    <div class="text-zinc-500">From</div>
+                                    <div class="font-medium text-zinc-700">제조센터장</div>
+                                </div>
+                                <div class="flex justify-center text-zinc-300"><i data-lucide="arrow-down" class="w-4 h-4"></i></div>
+                                <div class="flex items-center justify-between text-sm">
+                                    <div class="text-zinc-500">To</div>
+                                    <div class="font-bold text-blue-700">영업1팀 팀장</div>
+                                </div>
+                            </div>
+                            <!-- Impact removed -->
+                        </div>
+
+                        <!-- Person 2 -->
+                        <div class="bg-white rounded-xl border border-zinc-200 p-6 shadow-sm hover:shadow-md transition-shadow relative overflow-hidden group">
+                            <div class="absolute top-0 left-0 w-1 h-full bg-emerald-500"></div>
+                            <div class="flex justify-between items-start mb-6">
+                                <div>
+                                    <h3 class="text-lg font-bold text-zinc-900">권용일 부장</h3>
+                                    <span class="text-[10px] font-bold text-emerald-600 bg-emerald-50 px-2 py-1 rounded mt-1 inline-block">Transfer</span>
+                                </div>
+                            </div>
+                            <div class="space-y-4">
+                                <div class="flex items-center justify-between text-sm">
+                                    <div class="text-zinc-500">From</div>
+                                    <div class="font-medium text-zinc-700">생산기술부서장</div>
+                                </div>
+                                <div class="flex justify-center text-zinc-300"><i data-lucide="arrow-down" class="w-4 h-4"></i></div>
+                                <div class="flex items-center justify-between text-sm">
+                                    <div class="text-zinc-500">To</div>
+                                    <div class="font-bold text-emerald-700">전략구매부</div>
+                                </div>
+                            </div>
+                            <!-- Impact removed -->
+                        </div>
+
+                        <!-- Person 3 -->
+                        <div class="bg-white rounded-xl border border-zinc-200 p-6 shadow-sm hover:shadow-md transition-shadow relative overflow-hidden group">
+                            <div class="absolute top-0 left-0 w-1 h-full bg-zinc-500"></div>
+                            <div class="flex justify-between items-start mb-6">
+                                <div>
+                                    <h3 class="text-lg font-bold text-zinc-900">박범준 과장</h3>
+                                    <span class="text-[10px] font-bold text-zinc-600 bg-zinc-100 px-2 py-1 rounded mt-1 inline-block">Transfer</span>
+                                </div>
+                            </div>
+                            <div class="space-y-4">
+                                <div class="flex items-center justify-between text-sm">
+                                    <div class="text-zinc-500">From</div>
+                                    <div class="font-medium text-zinc-700">생산기술팀</div>
+                                </div>
+                                <div class="flex justify-center text-zinc-300"><i data-lucide="arrow-down" class="w-4 h-4"></i></div>
+                                <div class="flex items-center justify-between text-sm">
+                                    <div class="text-zinc-500">To</div>
+                                    <div class="font-bold text-zinc-700">관리부</div>
+                                </div>
+                            </div>
+                            <!-- Impact removed -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tab 4: Contacts -->
+                <div id="view-contacts" class="max-w-5xl mx-auto fade-in hidden">
+                    <header class="mb-6 flex justify-between items-center">
+                        <div>
+                            <span class="text-xs font-bold tracking-widest text-zinc-400 uppercase mb-2 block">Directory</span>
+                            <h1 class="text-3xl font-bold text-zinc-900 tracking-tight">CM Contact List</h1>
+                        </div>
+                        <div class="relative">
+                            <input type="text" id="contactSearch" placeholder="Search..." class="pl-9 pr-4 py-2 bg-white border border-zinc-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 w-64 shadow-sm">
+                            <i data-lucide="search" class="w-4 h-4 text-zinc-400 absolute left-3 top-2.5"></i>
+                        </div>
+                    </header>
+
+                    <div class="bg-white rounded-xl border border-zinc-200 overflow-hidden shadow-sm">
+                        <table class="w-full text-sm text-left">
+                            <thead class="bg-zinc-50 text-zinc-500 font-bold border-b border-zinc-200">
+                                <tr>
+                                    <th class="px-6 py-4">Category</th>
+                                    <th class="px-6 py-4">Department</th>
+                                    <th class="px-6 py-4">Name / Role</th>
+                                    <th class="px-6 py-4">Contact</th>
+                                    <th class="px-6 py-4">Note</th>
+                                </tr>
+                            </thead>
+                            <tbody id="contactTableBody" class="divide-y divide-zinc-100">
+                                <!-- Populated by JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </main>
+        </div>
+    </div>
+
+    <script>
+        // Initialize Lucide Icons
+        lucide.createIcons();
+
+        // --- Data Definitions ---
+        // UPDATED: isCM for mfg1, mfg2 set to false.
+        const orgData = {
+            name: "대표이사 박문수",
+            role: "CEO",
+            email: "mspark@ase-semi.com",
+            phone: "",
+            isCM: false,
+            leader: "",
+            children: [
+                {
+                    name: "통합운영센터",
+                    leader: "박원석 이사",
+                    email: "wspark@ase-semi.com",
+                    phone: "010-3376-3817",
+                    isCM: true,
+                    role: "Center Head",
+                    id: "ops-center",
+                    children: [
+                        {
+                            name: "제조팀",
+                            leader: "정재훈 차장",
+                            email: "jhjung@ase-semi.com",
+                            phone: "010-8534-9685",
+                            isCM: true,
+                            role: "Dept Head",
+                            children: [
+                                { name: "SPM팀(EVC CM)", leader: "이루리 대리", email: "rrlee@ase-semi.com", phone: "010-3636-2625", isCM: true, role: "Team Lead" },
+                                // CHANGED: isCM false
+                                { name: "제조1팀 (RF MAT)", leader: "서민수 차장", email: "msseo@ase-semi.com", phone: "010-2581-0080", isCM: false, role: "Team Lead" },
+                                // CHANGED: isCM false
+                                { name: "제조2팀 (RF GEN)", leader: "김시몬 대리", email: "smkim@ase-semi.com", phone: "010-8288-6742", isCM: false, role: "Team Lead" }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    name: "기술개발 마케팅센터",
+                    leader: "윤종환 부사장",
+                    email: "jhyoon@ase-semi.com",
+                    phone: "010-2041-2700",
+                    isCM: false,
+                    role: "Center Head",
+                    id: "rnd-center",
+                    children: [
+                        {
+                            name: "영업부",
+                            leader: "", 
+                            role: "Division",
+                            children: [
+                                { 
+                                    name: "영업1팀 (Sales for ASM)", 
+                                    leader: "변태준 상무", 
+                                    email: "tjben@ase-semi.com", 
+                                    phone: "010-2376-3891", 
+                                    isCM: true, 
+                                    role: "Team Lead",
+                                    members: ["조재영 대리", "박다연 대리"]
+                                },
+                                { name: "영업2팀", leader: "신현덕 이사", email: "hdshin@ase-semi.com", isCM: false, role: "Team Lead" }
+                            ]
+                        },
+                        {
+                            name: "연구소",
+                            leader: "",
+                            role: "Division",
+                            children: [
+                                { name: "연구1팀", leader: "박형열 이사", email: "hypark@ase-semi.com", isCM: false },
+                                { name: "연구2팀", leader: "정노훈 이사", email: "nhjung@ase-semi.com", isCM: false },
+                                { name: "소프트웨어팀", leader: "김진영 이사", email: "jykim@ase-semi.com", isCM: false },
+                                { name: "Application팀", leader: "박군준 이사", email: "kjpark@ase-semi.com", isCM: false },
+                                { name: "디자인팀", leader: "이용진 부장", email: "yjlee@ase-semi.com", isCM: false },
+                                { name: "연구기획운영팀", leader: "홍보한 상무", email: "bhhong@ase-semi.com", isCM: false }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    name: "품질팀",
+                    leader: "김봉현 차장",
+                    email: "bhkim@ase-semi.com",
+                    phone: "010-6218-1431",
+                    isCM: true,
+                    role: "Team Lead",
+                    id: "qa-team"
+                },
+                {
+                    name: "경영지원실",
+                    leader: "강승현 실장",
+                    email: "shkang@ase-semi.com",
+                    role: "Division Head",
+                    id: "mgt-div",
+                    children: [
+                        { name: "관리부", leader: "홍미경 부장", email: "mkhong@ase-semi.com", isCM: false },
+                        { name: "전략구매부", leader: "신동수 부장", email: "dsshin@ase-semi.com", isCM: true, role: "Dept Head", note: "Key for SCM" }
+                    ]
+                }
+            ]
+        };
+
+        const contactList = [
+            { cat: "총괄", dept: "통합운영센터", name: "박원석 이사", role: "센터장", email: "wspark@ase-semi.com", phone: "010-3376-3817", note: "CM 운영 총괄" },
+            { cat: "영업", dept: "영업1팀", name: "변태준 상무", role: "팀장", email: "tjben@ase-semi.com", phone: "010-2376-3891", note: "Sales for ASM" },
+            { cat: "제조", dept: "제조팀", name: "정재훈 차장", role: "부서장", email: "jhjung@ase-semi.com", phone: "010-8534-9685", note: "" },
+            { cat: "실무", dept: "SPM팀(EVC CM)", name: "이루리 대리", role: "팀장", email: "rrlee@ase-semi.com", phone: "010-3636-2625", note: "EVC CM 전담" },
+            { cat: "품질", dept: "품질팀", name: "김봉현 차장", role: "팀장", email: "bhkim@ase-semi.com", phone: "010-6218-1431", note: "" },
+            { cat: "구매", dept: "전략구매부", name: "신동수 부장", role: "부서장", email: "dsshin@ase-semi.com", phone: "-", note: "자재 수급/관리" }
+        ];
+
+        // --- Logic: Tab Switching ---
+        function switchTab(tabId) {
+            // Hide all views
+            document.querySelectorAll('[id^="view-"]').forEach(el => el.classList.add('hidden'));
+            // Reset nav styles
+            document.querySelectorAll('[id^="nav-"]').forEach(el => {
+                el.classList.remove('bg-zinc-200', 'text-zinc-900');
+                el.classList.add('text-zinc-500', 'hover:bg-zinc-100', 'hover:text-zinc-900');
+            });
+
+            // Show selected view
+            const view = document.getElementById('view-' + tabId);
+            view.classList.remove('hidden');
+            
+            // Set active nav
+            const btn = document.getElementById('nav-' + tabId);
+            btn.classList.remove('text-zinc-500', 'hover:bg-zinc-100', 'hover:text-zinc-900');
+            btn.classList.add('bg-zinc-200', 'text-zinc-900');
+        }
+
+        // --- Logic: Tree View (Updated with Leader Name) ---
+        function renderTree(node, container, level = 0) {
+            const nodeDiv = document.createElement('div');
+            nodeDiv.className = "relative";
+            if (level > 0) nodeDiv.style.paddingLeft = "1.5rem";
+
+            // Connector Line
+            if (level > 0) {
+                const line = document.createElement('div');
+                line.className = "absolute left-2 top-0 bottom-0 w-px bg-zinc-200";
+                // Only curve if not first
+                nodeDiv.appendChild(line);
+            }
+            
+            // Item Row
+            const content = document.createElement('div');
+            content.className = `flex items-center p-2 rounded-lg cursor-pointer hover:bg-zinc-100 transition-colors mb-1 group ${level === 0 ? 'bg-zinc-50 border border-zinc-200' : ''}`;
+            
+            // Icon
+            let iconColor = node.isCM ? "text-sky-500" : "text-zinc-400";
+            let iconSvg = '<i data-lucide="folder" class="w-4 h-4 ' + iconColor + '"></i>';
+            if (!node.children || node.children.length === 0) iconSvg = '<i data-lucide="circle" class="w-3 h-3 ' + iconColor + '"></i>';
+
+            // UPDATED: Display Leader Name
+            let leaderDisplay = "";
+            if (node.leader) {
+                leaderDisplay = `<span class="text-xs text-zinc-400 ml-2 font-normal group-hover:text-zinc-600">(${node.leader})</span>`;
+            }
+
+            content.innerHTML = `
+                <div class="mr-2">${iconSvg}</div>
+                <div class="flex-1 min-w-0">
+                    <span class="text-sm font-medium ${node.isCM ? 'text-zinc-900' : 'text-zinc-600'} group-hover:text-zinc-900 truncate block">
+                        ${node.name} ${leaderDisplay}
+                    </span>
+                </div>
+                ${node.isCM ? '<div class="w-2 h-2 rounded-full bg-sky-500 ml-2"></div>' : ''}
+            `;
+
+            // Click Handler
+            content.onclick = (e) => {
+                e.stopPropagation();
+                // Reset selection styles
+                document.querySelectorAll('#orgTreeContainer .bg-blue-50').forEach(el => {
+                    el.classList.remove('bg-blue-50', 'border-blue-200');
+                    if(!el.classList.contains('bg-zinc-50')) el.classList.remove('border');
+                });
+                
+                // Set active style
+                content.classList.add('bg-blue-50', 'border', 'border-blue-200');
+                showDetails(node);
+            };
+
+            nodeDiv.appendChild(content);
+
+            // Children
+            if (node.children && node.children.length > 0) {
+                const childrenContainer = document.createElement('div');
+                node.children.forEach(child => renderTree(child, childrenContainer, level + 1));
+                nodeDiv.appendChild(childrenContainer);
+            }
+
+            container.appendChild(nodeDiv);
+        }
+
+        function showDetails(node) {
+            document.getElementById('detailPlaceholder').classList.add('hidden');
+            document.getElementById('detailContent').classList.remove('opacity-0');
+            
+            document.getElementById('detailTitle').textContent = node.name;
+            document.getElementById('detailRole').textContent = node.role || (node.children ? 'Department' : 'Team');
+            document.getElementById('detailName').textContent = node.leader || 'N/A';
+            document.getElementById('detailEmail').textContent = node.email || '-';
+            document.getElementById('detailPhone').textContent = node.phone || '-';
+
+            // Badge
+            const badge = document.getElementById('detailBadge');
+            if (node.isCM) {
+                badge.classList.remove('hidden');
+            } else {
+                badge.classList.add('hidden');
+            }
+
+            // Members
+            const memberList = document.getElementById('memberList');
+            const memberSection = document.getElementById('membersSection');
+            memberList.innerHTML = '';
+            if (node.members && node.members.length > 0) {
+                memberSection.classList.remove('hidden');
+                node.members.forEach(m => {
+                    const li = document.createElement('li');
+                    li.className = "text-sm text-zinc-600 pl-3 border-l-2 border-zinc-200 py-1";
+                    li.textContent = m;
+                    memberList.appendChild(li);
+                });
+            } else {
+                memberSection.classList.add('hidden');
+            }
+        }
+
+        // --- Logic: Contact Table ---
+        function renderContacts(filter = "") {
+            const tbody = document.getElementById('contactTableBody');
+            tbody.innerHTML = '';
+            const filtered = contactList.filter(c => 
+                c.name.includes(filter) || c.role.includes(filter) || c.dept.includes(filter)
+            );
+
+            filtered.forEach(c => {
+                const row = document.createElement('tr');
+                row.className = "hover:bg-zinc-50 transition-colors group";
+                row.innerHTML = `
+                    <td class="px-6 py-4 font-bold text-zinc-400 text-xs uppercase tracking-wider">${c.cat}</td>
+                    <td class="px-6 py-4 font-medium text-zinc-700">${c.dept}</td>
+                    <td class="px-6 py-4">
+                        <div class="font-bold text-zinc-900">${c.name}</div>
+                        <div class="text-xs text-zinc-500">${c.role}</div>
+                    </td>
+                    <td class="px-6 py-4">
+                        <div class="text-blue-600 hover:underline cursor-pointer text-sm font-medium">${c.email}</div>
+                        <div class="text-zinc-400 text-xs font-mono mt-0.5">${c.phone}</div>
+                    </td>
+                    <td class="px-6 py-4 text-zinc-400 text-xs italic">${c.note}</td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        document.getElementById('contactSearch').addEventListener('input', (e) => {
+            renderContacts(e.target.value);
+        });
+
+        // --- Initialization ---
+        window.addEventListener('DOMContentLoaded', () => {
+            renderTree(orgData, document.getElementById('orgTreeContainer'));
+            renderContacts();
+            lucide.createIcons(); // Re-run for dynamic content just in case
+        });
+
+    </script>
+</body>
+</html>
