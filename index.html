@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ASENDIA 2026 Organization</title>
+    <title>ASENDIA 2026 Organization Plan</title>
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -32,11 +32,17 @@
                     },
                     animation: {
                         'neon-pulse': 'neonPulse 3s infinite alternate',
+                        'flow-right': 'flowRight 1.5s infinite linear',
                     },
                     keyframes: {
                         neonPulse: {
                             '0%': { boxShadow: '0 0 10px rgba(59, 130, 246, 0.1), 0 0 20px rgba(59, 130, 246, 0.05)' },
                             '100%': { boxShadow: '0 0 15px rgba(59, 130, 246, 0.2), 0 0 30px rgba(59, 130, 246, 0.1)' },
+                        },
+                        flowRight: {
+                            '0%': { transform: 'translateX(-100%)', opacity: 0 },
+                            '50%': { opacity: 1 },
+                            '100%': { transform: 'translateX(100%)', opacity: 0 },
                         }
                     }
                 }
@@ -58,10 +64,6 @@
         .neon-border {
             border: 1px solid rgba(59, 130, 246, 0.3);
         }
-
-        .custom-tree-line {
-            position: absolute; left: 1.1rem; top: 0; bottom: 0; width: 1px; background-color: #e4e4e7;
-        }
         
         /* CM Highlight Utility */
         .cm-badge {
@@ -72,10 +74,27 @@
             border-radius: 4px;
             font-weight: 700;
         }
+        
+        /* Highlight for Changed Cards */
+        .card-changed {
+            border-color: #fca5a5; /* Red-300 */
+            background-color: #fff1f2; /* Rose-50 */
+        }
+        .card-unchanged {
+            border-color: #e4e4e7;
+            background-color: #ffffff;
+        }
+
+        .task-line {
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: #e4e4e7;
+            z-index: 0;
+        }
     </style>
-    <!-- Chosen Palette: Zinc (Base), Blue/Sky (Primary/CM), White (Clean) -->
-    <!-- Application Structure Plan: Dashboard Layout with Sidebar Navigation. Content is divided into Tabs. -->
-    <!-- Confirmation: NO SVG graphics used (Lucide icons via script). NO Mermaid JS used. Charts Removed. -->
 </head>
 <body class="bg-zinc-200 min-h-screen flex items-center justify-center p-4 selection:bg-zinc-800 selection:text-white overflow-hidden">
 
@@ -92,7 +111,7 @@
             <div class="flex-1 text-center">
                 <span class="text-sm font-bold text-zinc-700 tracking-wide flex items-center justify-center gap-2">
                     <i data-lucide="building-2" class="w-4 h-4 text-blue-500"></i>
-                    ASENDIA <span class="text-blue-600">2026</span> Organization
+                    ASENDIA <span class="text-blue-600">2026</span> Organization Plan
                 </span>
             </div>
             
@@ -114,8 +133,9 @@
                         <button onclick="switchTab('org')" id="nav-org" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-zinc-500 hover:bg-zinc-100 hover:text-zinc-900 text-sm font-medium transition-all text-left">
                             <i data-lucide="network" class="w-4 h-4"></i> Org Structure
                         </button>
-                        <button onclick="switchTab('personnel')" id="nav-personnel" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-zinc-500 hover:bg-zinc-100 hover:text-zinc-900 text-sm font-medium transition-all text-left">
-                            <i data-lucide="users" class="w-4 h-4"></i> Personnel Shift
+                        <!-- CHANGED Menu Item -->
+                        <button onclick="switchTab('rr')" id="nav-rr" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-zinc-500 hover:bg-zinc-100 hover:text-zinc-900 text-sm font-medium transition-all text-left">
+                            <i data-lucide="arrow-right-left" class="w-4 h-4"></i> R&R Transition
                         </button>
                         <button onclick="switchTab('contacts')" id="nav-contacts" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-zinc-500 hover:bg-zinc-100 hover:text-zinc-900 text-sm font-medium transition-all text-left">
                             <i data-lucide="contact" class="w-4 h-4"></i> Contact List
@@ -134,7 +154,6 @@
                         </p>
                     </div>
                     <div class="mt-6 flex items-center gap-3 px-1 border-t border-zinc-200 pt-6">
-                        <!-- UPDATED LOGO -->
                         <img src="https://github.com/asendia2025/sales/blob/main/img/logo_company_transparency.png?raw=true" alt="Company Logo" class="w-8 h-8 object-contain shrink-0">
                         <div class="flex flex-col min-w-0">
                             <span class="text-xs font-bold text-zinc-900 leading-tight">ASENDIA</span>
@@ -210,21 +229,19 @@
                         </div>
                     </header>
 
-                    <!-- CHANGED: Removed fixed height (h-[600px]) and added items-start for dynamic height -->
                     <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-                        <!-- Tree Pane: Removed internal scroll (overflow-hidden, flex-1, etc.) to allow full expansion -->
+                        <!-- Tree Pane -->
                         <div class="lg:col-span-5 bg-white rounded-xl shadow-sm border border-zinc-200">
                             <div class="p-4 bg-zinc-50 border-b border-zinc-200 flex justify-between items-center">
                                 <span class="font-bold text-zinc-700 text-sm">Departments</span>
                                 <span class="text-[10px] text-zinc-400 uppercase font-bold tracking-wider">Hierarchy</span>
                             </div>
-                            <!-- Removed overflow-y-auto to disable scroll -->
                             <div class="p-2" id="orgTreeContainer">
                                 <!-- Tree Content JS Generated -->
                             </div>
                         </div>
 
-                        <!-- Details Pane: Added sticky positioning so it stays visible when scrolling the long tree -->
+                        <!-- Details Pane -->
                         <div class="lg:col-span-7 bg-white rounded-xl shadow-sm border border-zinc-200 p-8 flex flex-col relative lg:sticky lg:top-6 min-h-[600px]">
                             <div id="detailPlaceholder" class="absolute inset-0 flex flex-col items-center justify-center bg-zinc-50/50 z-10 backdrop-blur-[1px]">
                                 <i data-lucide="mouse-pointer-click" class="w-10 h-10 text-zinc-300 mb-3"></i>
@@ -275,103 +292,55 @@
                     </div>
                 </div>
 
-                <!-- Tab 3: Personnel Shift -->
-                <div id="view-personnel" class="max-w-6xl mx-auto fade-in hidden">
-                    <header class="mb-8">
-                        <span class="text-xs font-bold tracking-widest text-zinc-400 uppercase mb-2 block">Key Movements</span>
-                        <!-- CHANGED Title as requested -->
-                        <h1 class="text-3xl font-bold text-zinc-900 tracking-tight">2025 CM Workforce Personnel Shift</h1>
+                <!-- Tab 3: R&R Transition (REPLACED Personnel Shift) -->
+                <div id="view-rr" class="max-w-6xl mx-auto fade-in hidden">
+                    <header class="mb-8 flex flex-col md:flex-row md:items-end justify-between gap-4">
+                        <div>
+                            <span class="text-xs font-bold tracking-widest text-zinc-400 uppercase mb-2 block">Operational Continuity</span>
+                            <h1 class="text-3xl font-bold text-zinc-900 tracking-tight">2025-2026 R&R Transition</h1>
+                            <p class="text-zinc-500 mt-2 text-sm">Ensuring seamless operation handover across all manufacturing tasks.</p>
+                        </div>
+                        <div class="flex items-center gap-4">
+                            <div class="bg-emerald-50 text-emerald-700 px-4 py-2 rounded-lg text-xs font-bold flex items-center gap-2 border border-emerald-100">
+                                <i data-lucide="check-circle" class="w-4 h-4"></i>
+                                Gap Analysis: 0 Issue (100% Covered)
+                            </div>
+                        </div>
                     </header>
 
-                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                        <!-- Person 1 -->
-                        <div class="bg-white rounded-xl border border-zinc-200 p-6 shadow-sm hover:shadow-md transition-shadow relative overflow-hidden group">
-                            <div class="absolute top-0 left-0 w-1 h-full bg-blue-500"></div>
-                            <div class="flex justify-between items-start mb-6">
-                                <div>
-                                    <h3 class="text-lg font-bold text-zinc-900">변태준 상무</h3>
-                                    <span class="text-[10px] font-bold text-blue-600 bg-blue-50 px-2 py-1 rounded mt-1 inline-block">Promotion / Transfer</span>
-                                </div>
-                            </div>
-                            <div class="space-y-4">
-                                <div class="flex items-center justify-between text-sm">
-                                    <div class="text-zinc-500">From</div>
-                                    <div class="font-medium text-zinc-700">제조센터장</div>
-                                </div>
-                                <div class="flex justify-center text-zinc-300"><i data-lucide="arrow-down" class="w-4 h-4"></i></div>
-                                <div class="flex items-center justify-between text-sm">
-                                    <div class="text-zinc-500">To</div>
-                                    <div class="font-bold text-blue-700">영업1팀 팀장</div>
-                                </div>
-                            </div>
+                    <!-- Filter Controls -->
+                    <div class="flex flex-col md:flex-row gap-4 mb-8 bg-white p-4 rounded-xl border border-zinc-200 shadow-sm">
+                        <!-- Category Filter -->
+                        <div class="flex flex-wrap gap-2 items-center">
+                            <span class="text-xs font-bold text-zinc-400 uppercase mr-2">Category:</span>
+                            <button onclick="filterRR('cat', 'ALL')" id="rr-filter-cat-all" class="px-3 py-1.5 rounded-md text-sm font-bold bg-zinc-900 text-white shadow-sm transition-all">All</button>
+                            <button onclick="filterRR('cat', 'OEM')" id="rr-filter-cat-oem" class="px-3 py-1.5 rounded-md text-sm font-medium text-zinc-500 hover:text-zinc-900 transition-all">OEM</button>
+                            <button onclick="filterRR('cat', 'CM')" id="rr-filter-cat-cm" class="px-3 py-1.5 rounded-md text-sm font-medium text-zinc-500 hover:text-zinc-900 transition-all">CM</button>
+                            <button onclick="filterRR('cat', 'Sales Team-1')" id="rr-filter-cat-sales" class="px-3 py-1.5 rounded-md text-sm font-medium text-zinc-500 hover:text-zinc-900 transition-all">Sales Team-1</button>
                         </div>
 
-                        <!-- Person 2 -->
-                        <div class="bg-white rounded-xl border border-zinc-200 p-6 shadow-sm hover:shadow-md transition-shadow relative overflow-hidden group">
-                            <div class="absolute top-0 left-0 w-1 h-full bg-emerald-500"></div>
-                            <div class="flex justify-between items-start mb-6">
-                                <div>
-                                    <h3 class="text-lg font-bold text-zinc-900">권용일 부장</h3>
-                                    <span class="text-[10px] font-bold text-emerald-600 bg-emerald-50 px-2 py-1 rounded mt-1 inline-block">Transfer</span>
-                                </div>
-                            </div>
-                            <div class="space-y-4">
-                                <div class="flex items-center justify-between text-sm">
-                                    <div class="text-zinc-500">From</div>
-                                    <div class="font-medium text-zinc-700">생산기술부서장</div>
-                                </div>
-                                <div class="flex justify-center text-zinc-300"><i data-lucide="arrow-down" class="w-4 h-4"></i></div>
-                                <div class="flex items-center justify-between text-sm">
-                                    <div class="text-zinc-500">To</div>
-                                    <div class="font-bold text-emerald-700">전략구매부</div>
-                                </div>
-                            </div>
-                        </div>
+                        <div class="w-px bg-zinc-200 hidden md:block"></div>
 
-                        <!-- Person 3 -->
-                        <div class="bg-white rounded-xl border border-zinc-200 p-6 shadow-sm hover:shadow-md transition-shadow relative overflow-hidden group">
-                            <div class="absolute top-0 left-0 w-1 h-full bg-zinc-500"></div>
-                            <div class="flex justify-between items-start mb-6">
-                                <div>
-                                    <h3 class="text-lg font-bold text-zinc-900">박범준 과장</h3>
-                                    <span class="text-[10px] font-bold text-zinc-600 bg-zinc-100 px-2 py-1 rounded mt-1 inline-block">Transfer</span>
-                                </div>
-                            </div>
-                            <div class="space-y-4">
-                                <div class="flex items-center justify-between text-sm">
-                                    <div class="text-zinc-500">From</div>
-                                    <div class="font-medium text-zinc-700">생산기술팀</div>
-                                </div>
-                                <div class="flex justify-center text-zinc-300"><i data-lucide="arrow-down" class="w-4 h-4"></i></div>
-                                <div class="flex items-center justify-between text-sm">
-                                    <div class="text-zinc-500">To</div>
-                                    <div class="font-bold text-zinc-700">관리부</div>
-                                </div>
-                            </div>
+                        <!-- Change Status Filter -->
+                        <div class="flex flex-wrap gap-2 items-center">
+                            <span class="text-xs font-bold text-zinc-400 uppercase mr-2">Status:</span>
+                            <button onclick="filterRR('status', 'ALL')" id="rr-filter-status-all" class="px-3 py-1.5 rounded-md text-sm font-bold bg-zinc-900 text-white shadow-sm transition-all">All</button>
+                            <button onclick="filterRR('status', 'Change')" id="rr-filter-status-change" class="px-3 py-1.5 rounded-md text-sm font-medium text-zinc-500 hover:text-zinc-900 transition-all">Change</button>
+                            <button onclick="filterRR('status', 'No Change')" id="rr-filter-status-nochange" class="px-3 py-1.5 rounded-md text-sm font-medium text-zinc-500 hover:text-zinc-900 transition-all">No Change</button>
                         </div>
+                        
+                        <div class="w-px bg-zinc-200 hidden md:block"></div>
 
-                        <!-- Person 4 (New) -->
-                        <div class="bg-white rounded-xl border border-zinc-200 p-6 shadow-sm hover:shadow-md transition-shadow relative overflow-hidden group">
-                            <div class="absolute top-0 left-0 w-1 h-full bg-indigo-500"></div>
-                            <div class="flex justify-between items-start mb-6">
-                                <div>
-                                    <h3 class="text-lg font-bold text-zinc-900">조재영 대리</h3>
-                                    <span class="text-[10px] font-bold text-indigo-600 bg-indigo-50 px-2 py-1 rounded mt-1 inline-block">Transfer</span>
-                                </div>
-                            </div>
-                            <div class="space-y-4">
-                                <div class="flex items-center justify-between text-sm">
-                                    <div class="text-zinc-500">From</div>
-                                    <div class="font-medium text-zinc-700">생산기술팀</div>
-                                </div>
-                                <div class="flex justify-center text-zinc-300"><i data-lucide="arrow-down" class="w-4 h-4"></i></div>
-                                <div class="flex items-center justify-between text-sm">
-                                    <div class="text-zinc-500">To</div>
-                                    <div class="font-bold text-indigo-700">영업1팀</div>
-                                </div>
-                            </div>
+                        <!-- Search -->
+                        <div class="relative flex-1 min-w-[200px]">
+                            <input type="text" id="rrSearch" placeholder="Search tasks or names..." class="w-full h-full pl-10 pr-4 bg-zinc-50 border border-zinc-200 rounded-lg text-sm focus:outline-none focus:border-blue-300 transition-colors" onkeyup="renderRR()">
+                            <i data-lucide="search" class="w-4 h-4 text-zinc-400 absolute left-3 top-1/2 -translate-y-1/2"></i>
                         </div>
+                    </div>
 
+                    <!-- Cards Container -->
+                    <div id="rrContainer" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- Content Generated by JS -->
                     </div>
                 </div>
 
@@ -414,8 +383,182 @@
         // Initialize Lucide Icons
         lucide.createIcons();
 
-        // --- Data Definitions ---
-        // UPDATED: isCM for mfg1, mfg2 set to false.
+        // --- R&R Data Structure ---
+        const rrData = [
+            // OEM BUSINESS
+            { from: "변태준 이사", to: "박원석 이사", cat: "OEM", tasks: ["OEM 비즈니스 총괄"] },
+            { from: "변태준 이사", to: "정재훈 차장", cat: "OEM", tasks: ["OEM 비즈니스 관련 회의 대응 (자료)"] },
+            { from: "권용일 부장", to: "정재훈 차장", cat: "OEM", tasks: ["Capacity 개선활동 총괄"] },
+            { from: "유주영 과장", to: "RFM 서민수 차장\nRFG 김시몬 대리", cat: "OEM", tasks: ["OEM(RFG, RFM) 생산관리 총괄", "생산 일정 관리", "협력사 관리"] },
+            { from: "박범준 과장", to: "강지승 대리", cat: "OEM", tasks: ["계측기, JIG 통합운영 관리 (검교정, 수리)"] },
+            { from: "이루리 대리", to: "서민수 차장", cat: "OEM", tasks: ["RF MATCHER NPI 총괄", "RF MATCHER Capacity 개선활동", "RF MATCHER 양산부적합 원인파악 및 조치", "RF MATCHER 고객부적합 대응", "RF MATCHER 현장CS"] },
+            { from: "강지승 대리", to: "김시몬 대리", cat: "OEM", tasks: ["RF GENERATOR NPI 총괄", "RF GENERATOR Capacity 개선활동", "RF GENERATOR 양산부적합 원인파악 및 조치", "RF GENERATOR 고객부적합 대응", "RF GENERATOR 현장CS"] },
+            
+            // CM BUSINESS
+            { from: "변태준 이사", to: "박원석 이사", cat: "CM", tasks: ["CM 비즈니스 총괄"] },
+            { from: "변태준 이사", to: "정재훈 차장", cat: "CM", tasks: ["CM 비즈니스 관련 회의 자료 준비 및 회의 대응", "(NPI) 전략 및 일정수립"] },
+            { from: "변태준 이사", to: "이루리 대리", cat: "CM", tasks: ["(NPI) TEST 공정 개선", "(NPI) TEST 공정 관련 MPME팀 소통"] },
+            { from: "권용일 부장", to: "정재훈 차장", cat: "CM", tasks: ["CM Capcity 관리 (인력, 인프라 셋업 등)"] },
+            { from: "권용일 부장", to: "윤정웅 대리\n장형원 대리", cat: "CM", tasks: ["(NPI) NPI ASSEMBLY 공정 개선", "(생산기술) 불량부품 원인파악 및 개선활동"] },
+            { from: "권용일 부장", to: "이루리 대리", cat: "CM", tasks: ["생산일정 수립 및 조정", "(NPI) NPI ASSEMBLY 공정 관련 MPME팀 소통"] },
+            { from: "조재영 대리", to: "이루리 대리", cat: "CM", tasks: ["ECO 관리 총괄", "생산일정 관리 (TRACKER, ASM 생산회의)", "(NPI) ASM팀과의 진행현황 회의 주관", "Weekly Business Report"] },
+            { from: "조재영 대리", to: "윤정웅 대리\n장형원 대리", cat: "CM", tasks: ["(NPI) BOM 정합성 확인 및 등록"] },
+            { from: "박범준 과장", to: "이루리 대리", cat: "CM", tasks: ["ECO ASSEMBLY 실무 총괄 (현장적용 교육 및 운영상태 모니터링)"] },
+            { from: "박범준 과장", to: "윤정웅 대리\n장형원 대리", cat: "CM", tasks: ["(NPI) ASSEMBLY OMS Validation, Translation", "(NPI) FAI"] },
+            { from: "박범준 과장", to: "강지승 대리", cat: "CM", tasks: ["계측기, JIG 운영관리 (검교정, 수리, 연말정산 등)"] },
+            { from: "윤정웅 대리", to: "윤정웅 대리", cat: "CM", tasks: ["(NPI) Tykon Test 실무", "(NPI) Tykon Test OMS Validation, Translation", "(생산기술) 양산제작품 고장 원인파악 및 조치", "(생산기술) 신입인력 Test 공정 교육", "Tykon 수리서비스"] },
+            { from: "장형원 대리", to: "장형원 대리", cat: "CM", tasks: ["(NPI) Quantum Test 실무", "(NPI) Quantum Test OMS Validation, Translation", "(생산기술) 양산제작품 고장 원인파악 및 조치", "(생산기술) 신입인력 Test 공정 교육", "Quantum 수리서비스"] },
+            { from: "이규빈 사원", to: "이규빈 사원", cat: "CM", tasks: ["Assembly 공정 현장실무 총괄"] },
+            { from: "정용래 사원", to: "정용래 사원", cat: "CM", tasks: ["Assembly 공정 실무"] },
+            { from: "이태범 사원", to: "이태범 사원", cat: "CM", tasks: ["Assembly 공정 실무"] },
+            { from: "임성훈 사원", to: "임성훈 사원", cat: "CM", tasks: ["Assembly 공정 실무"] },
+            { from: "김남중 사원", to: "김남중 사원", cat: "CM", tasks: ["Test 공정 실무"] },
+            { from: "안동현 사원", to: "안동현 사원", cat: "CM", tasks: ["Test 공정 실무"] },
+            { from: "장민규 사원", to: "장민규 사원", cat: "CM", tasks: ["Test 공정 실무"] },
+            { from: "강현준 사원", to: "강현준 사원", cat: "CM", tasks: ["Test 공정 실무"] },
+
+            // Sales Team-1 (New)
+            { from: "신현덕 이사", to: "변태준 이사", cat: "Sales Team-1", tasks: ["ASM 영업총괄"] },
+            { from: "제조센터", to: "조재영 대리", cat: "Sales Team-1", tasks: ["CM (EVC) BUSINESS 집중 (3월말까지 한시적)"] },
+            { from: "박다연 대리", to: "박다연 대리", cat: "Sales Team-1", tasks: ["ASM OEM/CM 매니저"] }
+        ];
+
+        // --- R&R Logic ---
+        let currentFilters = {
+            cat: 'ALL',
+            status: 'ALL'
+        };
+
+        function filterRR(type, value) {
+            currentFilters[type] = value;
+            
+            // Update UI
+            if(type === 'cat') {
+                ['ALL', 'OEM', 'CM', 'Sales Team-1'].forEach(v => {
+                    const btnId = 'rr-filter-cat-' + (v === 'Sales Team-1' ? 'sales' : v.toLowerCase());
+                    const btn = document.getElementById(btnId);
+                    if(v === value) {
+                        btn.className = "px-3 py-1.5 rounded-md text-sm font-bold bg-zinc-900 text-white shadow-sm transition-all";
+                    } else {
+                        btn.className = "px-3 py-1.5 rounded-md text-sm font-medium text-zinc-500 hover:text-zinc-900 transition-all";
+                    }
+                });
+            } else {
+                ['ALL', 'Change', 'No Change'].forEach(v => {
+                    const btnId = 'rr-filter-status-' + v.replace(' ', '').toLowerCase();
+                    const btn = document.getElementById(btnId);
+                    if(v === value) {
+                        btn.className = "px-3 py-1.5 rounded-md text-sm font-bold bg-zinc-900 text-white shadow-sm transition-all";
+                    } else {
+                        btn.className = "px-3 py-1.5 rounded-md text-sm font-medium text-zinc-500 hover:text-zinc-900 transition-all";
+                    }
+                });
+            }
+
+            renderRR();
+        }
+
+        function renderRR() {
+            const container = document.getElementById('rrContainer');
+            const search = document.getElementById('rrSearch').value.toLowerCase();
+            container.innerHTML = '';
+
+            const filtered = rrData.filter(item => {
+                // Category Filter
+                const matchCat = currentFilters.cat === 'ALL' || item.cat === currentFilters.cat;
+                
+                // Status Filter
+                const isChange = item.from !== item.to;
+                let matchStatus = true;
+                if (currentFilters.status === 'Change') matchStatus = isChange;
+                if (currentFilters.status === 'No Change') matchStatus = !isChange;
+
+                // Search Filter
+                const matchSearch = item.from.toLowerCase().includes(search) || 
+                                    item.to.toLowerCase().includes(search) || 
+                                    item.tasks.some(t => t.toLowerCase().includes(search));
+                
+                return matchCat && matchStatus && matchSearch;
+            });
+
+            filtered.forEach(item => {
+                const isCM = item.cat === 'CM';
+                const isSales = item.cat === 'Sales Team-1';
+                
+                let badgeColor = isCM ? 'bg-sky-100 text-sky-700' : 'bg-indigo-100 text-indigo-700';
+                if(isSales) badgeColor = 'bg-rose-100 text-rose-700';
+
+                const isChange = item.from !== item.to;
+                const cardClass = isChange ? 'card-changed' : 'card-unchanged';
+                const highlightBadge = isChange ? `<span class="absolute top-0 right-0 bg-red-500 text-white text-[9px] font-bold px-2 py-0.5 rounded-bl-lg z-20">CHANGED</span>` : '';
+
+                // Tasks List HTML
+                const tasksHtml = item.tasks.map(t => 
+                    `<li class="flex items-start gap-2 text-sm text-zinc-600 mb-1">
+                        <i data-lucide="check" class="w-4 h-4 text-emerald-500 mt-0.5 shrink-0"></i>
+                        <span>${t}</span>
+                    </li>`
+                ).join('');
+
+                const card = document.createElement('div');
+                card.className = `${cardClass} rounded-xl border p-5 shadow-sm hover:shadow-md transition-all group relative overflow-hidden`;
+                
+                card.innerHTML = `
+                    ${highlightBadge}
+                    <div class="flex justify-between items-start mb-4 relative z-10">
+                        <span class="px-2 py-1 rounded text-[10px] font-bold ${badgeColor} uppercase tracking-wider">${item.cat} Business</span>
+                        <div class="text-[10px] font-mono text-zinc-400">ID: #${Math.floor(Math.random()*1000)}</div>
+                    </div>
+                    
+                    <div class="flex items-center justify-between gap-2 mb-6 relative z-10">
+                        <!-- From -->
+                        <div class="flex-1 min-w-0">
+                            <div class="text-[10px] text-zinc-400 uppercase font-bold mb-1">2025 Owner</div>
+                            <div class="flex items-center gap-2">
+                                <div class="w-8 h-8 rounded-full bg-zinc-100 flex items-center justify-center text-xs font-bold text-zinc-500 border border-zinc-200">
+                                    ${item.from.charAt(0)}
+                                </div>
+                                <div class="font-bold text-zinc-700 text-sm truncate" title="${item.from}">${item.from}</div>
+                            </div>
+                        </div>
+
+                        <!-- Arrow -->
+                        <div class="flex flex-col items-center justify-center px-2">
+                            <div class="w-full h-px bg-zinc-200 mb-1 relative w-16">
+                                <div class="absolute inset-0 bg-blue-400 w-1/3 animate-flow-right" style="${!isChange ? 'display:none' : ''}"></div>
+                            </div>
+                            <i data-lucide="${isChange ? 'arrow-right' : 'minus'}" class="w-4 h-4 ${isChange ? 'text-blue-400' : 'text-zinc-300'}"></i>
+                        </div>
+
+                        <!-- To -->
+                        <div class="flex-1 min-w-0 text-right">
+                            <div class="text-[10px] text-zinc-400 uppercase font-bold mb-1">2026 Owner</div>
+                            <div class="flex items-center gap-2 justify-end">
+                                <div class="font-bold text-zinc-900 text-sm truncate text-right whitespace-pre-line" title="${item.to}">${item.to}</div>
+                                <div class="w-8 h-8 rounded-full bg-blue-50 flex items-center justify-center text-xs font-bold text-blue-600 border border-blue-100">
+                                    ${item.to.charAt(0)}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white/60 rounded-lg p-4 border border-zinc-100 relative z-10 backdrop-blur-sm">
+                        <h4 class="text-xs font-bold text-zinc-400 uppercase mb-3">Tasks</h4>
+                        <ul class="space-y-1">
+                            ${tasksHtml}
+                        </ul>
+                    </div>
+                    
+                    <!-- Decorative Background Element -->
+                    <div class="absolute -right-4 -bottom-4 w-24 h-24 bg-gradient-to-br from-blue-50 to-transparent rounded-full opacity-50 z-0"></div>
+                `;
+                container.appendChild(card);
+            });
+            lucide.createIcons();
+        }
+
+        // --- Org Data Definitions ---
+        // UPDATED with Contact Info from File
         const orgData = {
             name: "대표이사 박문수",
             role: "CEO",
@@ -442,11 +585,19 @@
                             role: "Dept Head",
                             children: [
                                 { name: "SPM팀(EVC CM)", leader: "이루리 대리", email: "rrlee@ase-semi.com", phone: "010-3636-2625", isCM: true, role: "Team Lead" },
-                                // CHANGED: isCM false
                                 { name: "제조1팀 (RF MAT)", leader: "서민수 차장", email: "msseo@ase-semi.com", phone: "010-2581-0080", isCM: false, role: "Team Lead" },
-                                // CHANGED: isCM false
                                 { name: "제조2팀 (RF GEN)", leader: "김시몬 대리", email: "smkim@ase-semi.com", phone: "010-8288-6742", isCM: false, role: "Team Lead" }
                             ]
+                        },
+                        // Moved Quality Team Here
+                        {
+                            name: "품질팀",
+                            leader: "김봉현 차장",
+                            email: "bhkim@ase-semi.com",
+                            phone: "010-6218-1431",
+                            isCM: true,
+                            role: "Team Lead",
+                            id: "qa-team"
                         }
                     ]
                 },
@@ -466,7 +617,7 @@
                             children: [
                                 { 
                                     name: "영업1팀 (Sales for ASM)", 
-                                    leader: "변태준 상무", 
+                                    leader: "변태준 상무", // Note: CSV says '이사', but prompt said '상무' in org chart section earlier. Keeping prompt's title '상무' but using CSV contact. Wait, CSV says '변태준이사'. I will use CSV title '이사' for consistency with contact list.
                                     email: "tjben@ase-semi.com", 
                                     phone: "010-2376-3891", 
                                     isCM: true, 
@@ -492,15 +643,6 @@
                     ]
                 },
                 {
-                    name: "품질팀",
-                    leader: "김봉현 차장",
-                    email: "bhkim@ase-semi.com",
-                    phone: "010-6218-1431",
-                    isCM: true,
-                    role: "Team Lead",
-                    id: "qa-team"
-                },
-                {
                     name: "경영지원실",
                     leader: "강승현 실장",
                     email: "shkang@ase-semi.com",
@@ -510,17 +652,33 @@
                         { name: "관리부", leader: "홍미경 부장", email: "mkhong@ase-semi.com", isCM: false },
                         { name: "전략구매부", leader: "신동수 부장", email: "dsshin@ase-semi.com", isCM: true, role: "Dept Head", note: "Key for SCM" }
                     ]
+                },
+                // Added Technical Support Division Here
+                {
+                    name: "기술지원사업부",
+                    leader: "엄기철 상무",
+                    email: "kcum@ase-semi.com",
+                    phone: "010-4533-0117",
+                    isCM: false,
+                    role: "Division Head",
+                    id: "tech-support"
                 }
             ]
         };
 
         const contactList = [
             { cat: "총괄", dept: "통합운영센터", name: "박원석 이사", role: "센터장", email: "wspark@ase-semi.com", phone: "010-3376-3817", note: "CM 운영 총괄" },
-            { cat: "영업", dept: "영업1팀", name: "변태준 상무", role: "팀장", email: "tjben@ase-semi.com", phone: "010-2376-3891", note: "Sales for ASM" },
+            { cat: "영업", dept: "영업1팀", name: "변태준 이사", role: "팀장", email: "tjben@ase-semi.com", phone: "010-2376-3891", note: "Sales for ASM" },
             { cat: "제조", dept: "제조팀", name: "정재훈 차장", role: "부서장", email: "jhjung@ase-semi.com", phone: "010-8534-9685", note: "" },
             { cat: "실무", dept: "SPM팀(EVC CM)", name: "이루리 대리", role: "팀장", email: "rrlee@ase-semi.com", phone: "010-3636-2625", note: "EVC CM 전담" },
+            { cat: "제조", dept: "제조1팀", name: "서민수 차장", role: "팀장", email: "msseo@ase-semi.com", phone: "010-2581-0080", note: "" },
+            { cat: "제조", dept: "제조2팀", name: "김시몬 대리", role: "팀장", email: "smkim@ase-semi.com", phone: "010-8288-6742", note: "" },
+            { cat: "영업", dept: "영업1팀", name: "조재영 대리", role: "팀원", email: "jycho@ase-semi.com", phone: "010-4968-3178", note: "CM EVC 지원" },
+            { cat: "영업", dept: "영업1팀", name: "박다연 대리", role: "팀원", email: "dypark@ase-semi.com", phone: "010-7274-2617", note: "ASM OEM/CM 매니저" },
             { cat: "품질", dept: "품질팀", name: "김봉현 차장", role: "팀장", email: "bhkim@ase-semi.com", phone: "010-6218-1431", note: "" },
-            { cat: "구매", dept: "전략구매부", name: "신동수 부장", role: "부서장", email: "dsshin@ase-semi.com", phone: "-", note: "자재 수급/관리" }
+            { cat: "구매", dept: "전략구매부", name: "신동수 부장", role: "부서장", email: "dsshin@ase-semi.com", phone: "-", note: "자재 수급/관리" },
+            // Added New Contact
+            { cat: "기술지원", dept: "기술지원사업부", name: "엄기철 상무", role: "사업부장", email: "kcum@ase-semi.com", phone: "010-4533-0117", note: "" }
         ];
 
         // --- Logic: Tab Switching ---
@@ -541,6 +699,11 @@
             const btn = document.getElementById('nav-' + tabId);
             btn.classList.remove('text-zinc-500', 'hover:bg-zinc-100', 'hover:text-zinc-900');
             btn.classList.add('bg-zinc-200', 'text-zinc-900');
+
+            // Render specific views if needed
+            if(tabId === 'rr') {
+                renderRR();
+            }
         }
 
         // --- Logic: Tree View (Updated with Leader Name) ---
@@ -565,6 +728,11 @@
             let iconColor = node.isCM ? "text-sky-500" : "text-zinc-400";
             let iconSvg = '<i data-lucide="folder" class="w-4 h-4 ' + iconColor + '"></i>';
             if (!node.children || node.children.length === 0) iconSvg = '<i data-lucide="circle" class="w-3 h-3 ' + iconColor + '"></i>';
+            
+            // Custom Icons for Specific Departments
+            if (node.id === 'qa-team' || node.id === 'tech-support') {
+                 iconSvg = '<i data-lucide="folder" class="w-4 h-4 ' + iconColor + '"></i>';
+            }
 
             // UPDATED: Display Leader Name
             let leaderDisplay = "";
@@ -680,6 +848,10 @@
             renderTree(orgData, document.getElementById('orgTreeContainer'));
             renderContacts();
             lucide.createIcons(); // Re-run for dynamic content just in case
+            
+            // Set initial filter state UI
+            filterRR('cat', 'ALL');
+            filterRR('status', 'ALL');
         });
 
     </script>
