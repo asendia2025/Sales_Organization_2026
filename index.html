@@ -317,6 +317,7 @@
                             <button onclick="filterRR('cat', 'OEM')" id="rr-filter-cat-oem" class="px-3 py-1.5 rounded-md text-sm font-medium text-zinc-500 hover:text-zinc-900 transition-all">OEM</button>
                             <button onclick="filterRR('cat', 'CM')" id="rr-filter-cat-cm" class="px-3 py-1.5 rounded-md text-sm font-medium text-zinc-500 hover:text-zinc-900 transition-all">CM</button>
                             <button onclick="filterRR('cat', 'Sales Team-1')" id="rr-filter-cat-sales" class="px-3 py-1.5 rounded-md text-sm font-medium text-zinc-500 hover:text-zinc-900 transition-all">Sales Team-1</button>
+                            <button onclick="filterRR('cat', 'Environment')" id="rr-filter-cat-environment" class="px-3 py-1.5 rounded-md text-sm font-medium text-zinc-500 hover:text-zinc-900 transition-all">Environment</button>
                         </div>
 
                         <div class="w-px bg-zinc-200 hidden md:block"></div>
@@ -420,7 +421,10 @@
             // Sales Team-1 (New)
             { from: "신현덕 이사", to: "변태준 이사", cat: "Sales Team-1", tasks: ["ASM 영업총괄"] },
             { from: "제조센터", to: "조재영 대리", cat: "Sales Team-1", tasks: ["CM (EVC) BUSINESS 집중 (3월말까지 한시적)"] },
-            { from: "박다연 대리", to: "박다연 대리", cat: "Sales Team-1", tasks: ["ASM OEM/CM 매니저"] }
+            { from: "박다연 대리", to: "박다연 대리", cat: "Sales Team-1", tasks: ["ASM OEM/CM 매니저"] },
+
+            // Environment (New)
+            { from: "정재훈 차장", to: "박범준 과장", cat: "Environment", tasks: ["EHS (RBA, CDP, RE100)"] }
         ];
 
         // --- R&R Logic ---
@@ -434,7 +438,7 @@
             
             // Update UI
             if(type === 'cat') {
-                ['ALL', 'OEM', 'CM', 'Sales Team-1'].forEach(v => {
+                ['ALL', 'OEM', 'CM', 'Sales Team-1', 'Environment'].forEach(v => {
                     const btnId = 'rr-filter-cat-' + (v === 'Sales Team-1' ? 'sales' : v.toLowerCase());
                     const btn = document.getElementById(btnId);
                     if(v === value) {
@@ -484,9 +488,11 @@
             filtered.forEach(item => {
                 const isCM = item.cat === 'CM';
                 const isSales = item.cat === 'Sales Team-1';
+                const isEnv = item.cat === 'Environment';
                 
                 let badgeColor = isCM ? 'bg-sky-100 text-sky-700' : 'bg-indigo-100 text-indigo-700';
                 if(isSales) badgeColor = 'bg-rose-100 text-rose-700';
+                if(isEnv) badgeColor = 'bg-emerald-100 text-emerald-700';
 
                 const isChange = item.from !== item.to;
                 const cardClass = isChange ? 'card-changed' : 'card-unchanged';
